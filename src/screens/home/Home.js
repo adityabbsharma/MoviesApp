@@ -20,11 +20,11 @@ const Home = (props) => {
   const [upcoming, setUpcoming] = useState([]);
   const [artists, setArtists] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [movieTitle, setMovieTitle] = useState([]);
+  const [movieTitle, setMovieTitle] = useState("");
   const [checkedGenres, setCheckedGenres] = useState([]);
   const [checkedArtists, setCheckedArtists] = useState([]);
-  const [StartReleasedDate, setStartReleasedDate] = useState("");
-  const [EndReleasedDate, setEndReleasedDate] = useState("");
+  const [startReleasedDate, setStartReleasedDate] = useState("");
+  const [endReleasedDate, setEndReleasedDate] = useState("");
   // const { classes } = props;
   const history = useHistory();
   const useStyles = makeStyles((theme) => ({
@@ -116,12 +116,57 @@ const Home = (props) => {
       .then((response) => setArtists(response.artists));
   }, []);
 
-  const applyFilterHandler = ()=>{
+  const applyFilterHandler = () => {
     let newMoviesList = released;
-    if(movieTitle!==""){
-      console.log(released);
-      newMoviesList = released.filter((movie) => movie.title === movieTitle);
-    }    
+    if (movieTitle !== "") {
+      newMoviesList = newMoviesList.filter((movie) => movie.title === movieTitle);
+    }
+
+    if (checkedGenres.length > 0) {
+      for (let genre of checkedGenres) {
+        newMoviesList = newMoviesList.filter((movie) => {
+          for (let gen of movie["genres"]) {
+            if (gen === genre) {
+              return true;
+            }
+          }
+        });
+      }
+    }
+    if(checkedArtists.length>0){
+      for(let artist of checkedArtists){
+        newMoviesList = newMoviesList.filter((movie) => {
+          for (let art of movie["artists"]) {
+            if((art.first_name+" "+art.last_name)===artist){
+              return true;
+            }
+          }
+        });
+      }
+    }
+    if(startReleasedDate!==""){      
+        //console.log("startReleasedDate="+startReleasedDate);
+        let daterel = new Date(startReleasedDate);
+        newMoviesList = newMoviesList.filter((movie) => {          
+          let daterelmovie = new Date(movie.release_date);
+          //console.log("daterel.getTime="+daterel.getTime() + "daterelmovie.getTime="+daterelmovie.getTime());
+          if(daterelmovie.getTime()>=daterel.getTime()){
+            return true;
+          }
+        });      
+    }
+    if(endReleasedDate!==""){      
+      //console.log("startReleasedDate="+startReleasedDate);
+      let daterel = new Date(endReleasedDate);
+      newMoviesList = newMoviesList.filter((movie) => {          
+        let daterelmovie = new Date(movie.release_date);
+        //console.log("daterel.getTime="+daterel.getTime() + "daterelmovie.getTime="+daterelmovie.getTime());
+        if(daterelmovie.getTime()<=daterel.getTime()){
+          return true;
+        }
+      });      
+  }
+
     setReleased(newMoviesList);
   }
   return (
@@ -156,10 +201,10 @@ const Home = (props) => {
               <Typography className="typoGraphy">FIND MOVIES BY:</Typography>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="moviename">Movie Name</InputLabel>
-                <Input id="moviename" name="movietitle" onChange={(e) => setMovieTitle(e.target.value)}/>
+                <Input id="moviename" name="movietitle" onChange={(e) => setMovieTitle(e.target.value)} />
               </FormControl>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="select-multiple-checkbox">
+                <InputLabel htmlFor="select-multiple-checkbox-genre">
                   Genres
                 </InputLabel>
                 <Select
@@ -179,6 +224,51 @@ const Home = (props) => {
                   ))}
                 </Select>
               </FormControl>
+              <br/>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="select-multiple-checkbox-artists">
+                  Artists
+                </InputLabel>
+                <Select
+                  multiple
+                  input={<Input id="select-multiple-checkbox-artists" />}
+                  renderValue={(selected) => selected.join(",")}
+                  value={checkedArtists}
+                  onChange={(e) => setCheckedArtists(e.target.value)}
+                >
+                  {artists.map((artist) => (
+                    <MenuItem key={artist.id} value={artist.first_name + " "+ artist.last_name}>
+                      <Checkbox
+                        checked={checkedArtists.indexOf(artist.first_name + " "+ artist.last_name) > -1}
+                      />
+                      <ListItemText primary={artist.first_name + " "+ artist.last_name} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl className={classes.formControl}>
+                <TextField
+                  id="startrelease"
+                  label="start release date"
+                  type="date"
+                  defaultValue=""
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => setStartReleasedDate(e.target.value)}
+                />
+              </FormControl>
+
+              <FormControl className={classes.formControl}>
+                <TextField
+                  id="endrelease"
+                  label="end release date"
+                  type="date"
+                  defaultValue=""
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(e) => setEndReleasedDate(e.target.value)}
+                />
+              </FormControl>
+
               <FormControl className={classes.formControl}>
                 <Button
                   onClick={() => applyFilterHandler()}
@@ -191,7 +281,7 @@ const Home = (props) => {
             </Paper>
           </Grid>
         </Grid>
-      </div>      
+      </div>
     </div>
   )
 };
