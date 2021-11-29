@@ -1,0 +1,23 @@
+.releasedClass{
+    display: flex;    
+}
+.coloumnLeft{
+    flex: 76%;
+    /* padding: 10px;
+    height: 300px; */
+    margin: 16px;    
+}
+.coloumnRight{
+    flex: 24%;
+    /* padding: 10px;
+    height: 300px; */
+    margin: 16px;
+}
+.imageClass{
+    justify-content: center;
+    align-items: center;
+    margin: auto;    
+}
+.typoGraphy{
+    color: #536dfe;
+}
