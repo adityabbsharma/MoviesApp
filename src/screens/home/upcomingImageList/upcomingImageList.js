@@ -1,16 +1,12 @@
-import React from 'react';
+import React ,{Fragment} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
-// import IconButton from '@material-ui/core/IconButton';
-// import StarBorderIcon from '@material-ui/icons/StarBorder';
-// import itemData from './itemData';
 
 const useStyles = makeStyles((theme) => ({  
   imageList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+    flexWrap: 'nowrap',    
     transform: 'translateZ(0)'  
   },
   title: {
@@ -26,7 +22,10 @@ export default function UpcomingImageList({upcoming}) {
   const classes = useStyles();
   
   return (      
-    
+    <Fragment>
+      <div className="scrollBarTop" >
+                Upcoming Movies
+      </div>
       <ImageList className={classes.imageList} cols={6} rowHeight={250}>
         {upcoming.map((item) => (
           <ImageListItem key={item.id}>
@@ -37,6 +36,7 @@ export default function UpcomingImageList({upcoming}) {
           </ImageListItem>
         ))}
       </ImageList>
-    // </div>
+    </Fragment>
+         
   );
 }

@@ -54,21 +54,7 @@ const Home = (props) => {
       marginTop: theme.spacing(2),
     },
   }));
-
-  const [age, setAge] = React.useState('');
-  const [open, setOpen] = React.useState(false);
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
+ 
   const classes = useStyles();
   useEffect(() => {
     //Fetch upcoming movies
@@ -173,12 +159,9 @@ const Home = (props) => {
     <div className="HomeMain">
       <div>
         <Header {...props} baseUrl={props.baseUrl} />
-      </div>
-      <div>
-        <UpcomingImageList upcoming={upcoming} />
-      </div>
+      </div>      
       <div className={classes.root}>
-        <Grid container spacing={3}>
+        <Grid container spacing={1}>
           <Grid item xs={9}>
             <Paper className={classes.paper}>
               <div >

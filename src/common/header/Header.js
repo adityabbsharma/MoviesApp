@@ -138,6 +138,8 @@ const Header = (props) => {
                                 variant="contained"
                                 onClick={handleLogOut}
                                 color="default"
+                                href="#"
+                                className="cursorPointer"
                             > LogOut
                             </Button>
                         </div>
@@ -146,6 +148,7 @@ const Header = (props) => {
                                 variant="contained"
                                 onClick={bookShowButtonHandler}
                                 color="default"
+                                className="cursorPointer"                                
                             > BookShow
                             </Button>
                         </div>
@@ -158,6 +161,7 @@ const Header = (props) => {
                                 variant="contained"
                                 onClick={logInRegisterButtonHandler}
                                 color="default"
+                                className="cursorPointer"
                             > LogIn/Register
                             </Button>
                         </div>
@@ -165,6 +169,7 @@ const Header = (props) => {
                             <Button
                                 variant="contained"
                                 color="default"
+                                className="cursorPointer"
                             > BookShow
                             </Button>
                         </div>
@@ -175,7 +180,6 @@ const Header = (props) => {
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={toggleModal}
-
                     style={customStyles}
                     contentLabel="ex Modal"
 

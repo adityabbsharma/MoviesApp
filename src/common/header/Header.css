@@ -34,3 +34,6 @@
       display: flex;
       
   }
+  .cursorPointer{
+      cursor: pointer;
+  }
