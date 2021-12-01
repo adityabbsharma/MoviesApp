@@ -1,16 +1,14 @@
 
 import React, { useEffect, useState } from 'react';
 import Header from "../../common/header/Header";
-import { Grid, Paper, TextField, Button, InputLabel, Input, Typography, Select, MenuItem } from '@material-ui/core';
+import { Grid,  Typography} from '@material-ui/core';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import { useHistory, useParams } from "react-router-dom";
-import FormControl from '@material-ui/core/FormControl';
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItemText from "@material-ui/core/ListItemText";
 import "./Details.css";
 import YouTube from 'react-youtube';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 
 
@@ -19,18 +17,11 @@ const Details = (props) => {
     const history = useHistory();
     const { id } = useParams();
     const [movie, setMovie] = useState({});
-    // const[title,setTitle] = useState("");
-    // const[posterurl,setPosterUrl] = useState("");
-    // const[genres,setGenres] = useState({});
-    // const[storyline,setStoryLine] = useState("");
-    // const[duration,setDuration] = useState();
-    // const[releasedate,setReleasedate] = useState("");
-    // const[rating,setRating] = useState();
-    // const[wikiurl,setWikiurl] = useState("");
-    // const[trailerurl,setTrailerurl] = useState("");
-    // const[artists,setArtists] = useState([]);
+    const bookShowButtonHandler = props.bookShowButtonHandler;
+
     useEffect(() => {
         //Fetch upcoming movies
+        bookShowButtonHandler(true);
         console.log("id=" + id);
         fetch(props.baseUrl + "movies/" + id, {
             method: "GET",
@@ -51,10 +42,32 @@ const Details = (props) => {
         // setRating(movie.rating);
         // setWikiurl(movie.wiki_url);
         // setTrailerurl(movie.trailer_url);
-        // setArtists(movie.artists);
-        // console.log(genres);
-    }, []);
+        // setArtists(movie["artists"]);
 
+        // console.log("artists="+artists[0]);
+        // console.log("movie[artists]="+movie.artists[0]);
+    }, []);
+    const [colorOfStarOne, setColorOfStarOne] = useState("Black");
+    const [colorOfStarTwo, setColorOfStarTwo] = useState("Black");
+    const [colorOfStarThree, setColorOfStarThree] = useState("Black");
+    const [colorOfStarFour, setColorOfStarFour] = useState("Black");
+    const [colorOfStarFive, setColorOfStarFive] = useState("Black");
+
+    const clickHandlerOne = () => {
+        setColorOfStarOne("yellow");
+    }
+    const clickHandlerTwo = () => {
+        setColorOfStarTwo("yellow");
+    }
+    const clickHandlerThree = () => {
+        setColorOfStarThree("yellow");
+    }
+    const clickHandlerFour = () => {
+        setColorOfStarFour("yellow");
+    }
+    const clickHandlerFive = () => {
+        setColorOfStarFive("yellow");
+    }
 
     return (
         <div className="DetailsMain">
@@ -91,12 +104,33 @@ const Details = (props) => {
                             <YouTube videoId={movie.trailer_url && movie.trailer_url.split("?v=")[1]} />
                         </Typography>
                     </div>
-
-
-
-
                 </div>
                 <div className="coloumn3">
+                    <Typography>
+                        <b>Rate this movie:</b>
+                    </Typography>
+                    <div>
+                        <StarBorderIcon style={{ color: colorOfStarOne }} onClick={clickHandlerOne} ></StarBorderIcon>
+                        <StarBorderIcon style={{ color: colorOfStarTwo }} onClick={clickHandlerTwo}></StarBorderIcon>
+                        <StarBorderIcon style={{ color: colorOfStarThree }} onClick={clickHandlerThree}></StarBorderIcon>
+                        <StarBorderIcon style={{ color: colorOfStarFour }} onClick={clickHandlerFour}></StarBorderIcon>
+                        <StarBorderIcon style={{ color: colorOfStarFive }} onClick={clickHandlerFive}></StarBorderIcon>
+                    </div>
+                    <Typography style={{ margintop: "16px", marginbottom: "16px" }} >
+                        <b>Artists:</b>
+                    </Typography>
+                    <Grid>
+                        <ImageList cols={2} rowHeight={150}>
+                            {movie.artists && movie.artists.map((item) => (
+                                <ImageListItem key={item.id} >
+                                    <img src={item.profile_url} alt={item.first_name + " " + item.last_name} />
+                                    <ImageListItemBar
+                                        title={item.first_name + " " + item.last_name}
+                                    />
+                                </ImageListItem>
+                            ))}
+                        </ImageList>
+                    </Grid>
 
                 </div>
 

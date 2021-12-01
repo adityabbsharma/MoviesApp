@@ -4,21 +4,23 @@ import './Header.css';
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Modal from 'react-modal';
-import SignInOutContainer from '../../screens/logInSignUp/signInOutContainer'
+import SignInOutContainer from '../../screens/logInSignUp/signInOutContainer';
+import { Link } from "react-router-dom";
 
 const customStyles = {
     content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
     },
-  };
-  
+};
+
 
 const Header = (props) => {
+    const id = props.idbtn;
     const [userDetails, setUserDetails] = useState({
         "first_name": "",
         "last_name": "",
@@ -46,10 +48,10 @@ const Header = (props) => {
                 "Content-Type": "application/json",
                 "Cache-Control": "no-cache"
             }
-        }).then((rawResponse) =>  rawResponse.json() )
+        }).then((rawResponse) => rawResponse.json())
             .then((rawResponse) => {
-                if (rawResponse.status === "ACTIVE") {                 
-                    console.log("respoonse status="+rawResponse.status);
+                if (rawResponse.status === "ACTIVE") {
+                    console.log("respoonse status=" + rawResponse.status);
                     toggleModal();
                     history.push("/");
                 }
@@ -61,9 +63,9 @@ const Header = (props) => {
             });
 
     };
-    const logInSubmitHandler = (event,details) => {
+    const logInSubmitHandler = (event, details) => {
         event.preventDefault();
-        console.log("details.email_address="+details.email_address);
+        console.log("details.email_address=" + details.email_address);
 
         fetch(props.baseUrl + "auth/login", {
             method: "POST",
@@ -83,8 +85,8 @@ const Header = (props) => {
             })
             .then((response) => {
                 if (response.status === "ACTIVE") {
-                    setLoggedInFlag(true);                    
-                    console.log("loginrespoonse status="+response.status);                   
+                    setLoggedInFlag(true);
+                    console.log("loginrespoonse status=" + response.status);
                     toggleModal();
                     history.push("/");
                 }
@@ -99,19 +101,19 @@ const Header = (props) => {
         setIsModalOpen(!modalIsOpen);
     };
     const [loggedInFlag, setLoggedInFlag] = useState(sessionStorage.getItem("access-token") == null ? false : true);
-    
-    const [isLogInRegisterPressed, setloginregisterpressedflag] = useState(false);    
-    const logInRegisterButtonHandler = () => {        
+
+    const [isLogInRegisterPressed, setloginregisterpressedflag] = useState(false);
+    const logInRegisterButtonHandler = () => {
         setloginregisterpressedflag(true);
         setIsModalOpen(true);
     };
-    
+
     const handleLogOut = (e) => {
         e.preventDefault();
         sessionStorage.removeItem("access-token");
         setLoggedInFlag(false);
     };
-    const bookShowButtonHandler = () => {
+    const bookingHandler = () => {
         // setPopOverFlag(true);
         // <Popover
         //     anchorOrigin={{
@@ -143,15 +145,17 @@ const Header = (props) => {
                             > LogOut
                             </Button>
                         </div>
-                        <div>
-                            <Button
-                                variant="contained"
-                                onClick={bookShowButtonHandler}
-                                color="default"
-                                className="cursorPointer"                                
-                            > BookShow
-                            </Button>
-                        </div>
+                        {props.bookShowButtonShow && <div>
+                            <Link to={"/bookshow/" + id}>
+                                <Button
+                                    variant="contained"
+                                    onClick={bookingHandler}
+                                    color="default"
+                                    className="cursorPointer"
+                                > Book Show
+                                </Button>
+                            </Link>
+                        </div>}
                     </div>)
                     :
                     (<div id="logInButton">
@@ -165,35 +169,34 @@ const Header = (props) => {
                             > LogIn/Register
                             </Button>
                         </div>
-                        <div>
-                            <Button
-                                variant="contained"
-                                color="default"
-                                className="cursorPointer"
-                            > BookShow
-                            </Button>
-                        </div>
+                        {props.bookShowButtonShow && <div>
+                            <Link to={"/bookshow/" + id}>
+                                <Button
+                                    variant="contained"
+                                    onClick={bookingHandler}
+                                    color="default"
+                                    className="cursorPointer"
+                                > Book Show
+                                </Button>
+                            </Link>
+
+                        </div>}
                     </div>)
                 }
             </div>
-            {isLogInRegisterPressed ? (                
+            {isLogInRegisterPressed ? (
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={toggleModal}
                     style={customStyles}
                     contentLabel="ex Modal"
-
-                >                    
+                >
                     <SignInOutContainer {...props} logInSubmitHandler={logInSubmitHandler} signUpSubmitHandler={signUpSubmitHandler} userDetails={userDetails} setUserDetails={setUserDetails} />
-                    
+
 
                 </Modal>
             ) : ("")}
 
-            <div className="scrollBarTop" >
-                Upcoming Movies
-            </div>
-            
         </Fragment>
 
     )

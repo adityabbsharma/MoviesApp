@@ -25,7 +25,10 @@ const Home = (props) => {
   const [checkedArtists, setCheckedArtists] = useState([]);
   const [startReleasedDate, setStartReleasedDate] = useState("");
   const [endReleasedDate, setEndReleasedDate] = useState("");
+  // const [bookShowButtonShow,setBookShowButtonShow] = useState(false);
   // const { classes } = props;
+  const idBtnHandler = props.idBtnHandler;
+  const bookShowButtonHandler = props.bookShowButtonHandler;
   const history = useHistory();
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,10 +57,11 @@ const Home = (props) => {
       marginTop: theme.spacing(2),
     },
   }));
- 
+  const idbtn = props.idbtn;
   const classes = useStyles();
   useEffect(() => {
     //Fetch upcoming movies
+    bookShowButtonHandler(false);
     fetch(props.baseUrl + "movies?status=PUBLISHED", {
       method: "GET",
       headers: {
@@ -119,47 +123,50 @@ const Home = (props) => {
         });
       }
     }
-    if(checkedArtists.length>0){
-      for(let artist of checkedArtists){
+    if (checkedArtists.length > 0) {
+      for (let artist of checkedArtists) {
         newMoviesList = newMoviesList.filter((movie) => {
           for (let art of movie["artists"]) {
-            if((art.first_name+" "+art.last_name)===artist){
+            if ((art.first_name + " " + art.last_name) === artist) {
               return true;
             }
           }
         });
       }
     }
-    if(startReleasedDate!==""){      
-        //console.log("startReleasedDate="+startReleasedDate);
-        let daterel = new Date(startReleasedDate);
-        newMoviesList = newMoviesList.filter((movie) => {          
-          let daterelmovie = new Date(movie.release_date);
-          //console.log("daterel.getTime="+daterel.getTime() + "daterelmovie.getTime="+daterelmovie.getTime());
-          if(daterelmovie.getTime()>=daterel.getTime()){
-            return true;
-          }
-        });      
-    }
-    if(endReleasedDate!==""){      
+    if (startReleasedDate !== "") {
       //console.log("startReleasedDate="+startReleasedDate);
-      let daterel = new Date(endReleasedDate);
-      newMoviesList = newMoviesList.filter((movie) => {          
+      let daterel = new Date(startReleasedDate);
+      newMoviesList = newMoviesList.filter((movie) => {
         let daterelmovie = new Date(movie.release_date);
         //console.log("daterel.getTime="+daterel.getTime() + "daterelmovie.getTime="+daterelmovie.getTime());
-        if(daterelmovie.getTime()<=daterel.getTime()){
+        if (daterelmovie.getTime() >= daterel.getTime()) {
           return true;
         }
-      });      
-  }
+      });
+    }
+    if (endReleasedDate !== "") {
+      //console.log("startReleasedDate="+startReleasedDate);
+      let daterel = new Date(endReleasedDate);
+      newMoviesList = newMoviesList.filter((movie) => {
+        let daterelmovie = new Date(movie.release_date);
+        //console.log("daterel.getTime="+daterel.getTime() + "daterelmovie.getTime="+daterelmovie.getTime());
+        if (daterelmovie.getTime() <= daterel.getTime()) {
+          return true;
+        }
+      });
+    }
 
     setReleased(newMoviesList);
   }
   return (
     <div className="HomeMain">
       <div>
-        <Header {...props} baseUrl={props.baseUrl} />
-      </div>      
+        <Header {...props} idbtn={props.idbtn} bookShowButtonShow={props.bookShowButtonShow} bookShowButtonHandler={bookShowButtonHandler} baseUrl={props.baseUrl} />
+      </div>
+      <div>
+        <UpcomingImageList upcoming={upcoming} />
+      </div>
       <div className={classes.root}>
         <Grid container spacing={1}>
           <Grid item xs={9}>
@@ -167,7 +174,7 @@ const Home = (props) => {
               <div >
                 <ImageList cols={4} rowHeight={350}>
                   {released.map((item) => (
-                    <ImageListItem key={item.id} onClick={() => history.push("/movie/" + item.id)}>
+                    <ImageListItem key={item.id} onClick={() => { bookShowButtonHandler(true); idBtnHandler(item.id); history.push("/movie/" + item.id); }}>
                       <img src={item.poster_url} alt={item.title} />
                       <ImageListItemBar
                         title={item.title}
@@ -207,7 +214,7 @@ const Home = (props) => {
                   ))}
                 </Select>
               </FormControl>
-              <br/>
+              <br />
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="select-multiple-checkbox-artists">
                   Artists
@@ -220,11 +227,11 @@ const Home = (props) => {
                   onChange={(e) => setCheckedArtists(e.target.value)}
                 >
                   {artists.map((artist) => (
-                    <MenuItem key={artist.id} value={artist.first_name + " "+ artist.last_name}>
+                    <MenuItem key={artist.id} value={artist.first_name + " " + artist.last_name}>
                       <Checkbox
-                        checked={checkedArtists.indexOf(artist.first_name + " "+ artist.last_name) > -1}
+                        checked={checkedArtists.indexOf(artist.first_name + " " + artist.last_name) > -1}
                       />
-                      <ListItemText primary={artist.first_name + " "+ artist.last_name} />
+                      <ListItemText primary={artist.first_name + " " + artist.last_name} />
                     </MenuItem>
                   ))}
                 </Select>

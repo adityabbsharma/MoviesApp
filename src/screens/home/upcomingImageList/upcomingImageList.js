@@ -22,7 +22,7 @@ export default function UpcomingImageList({upcoming}) {
   const classes = useStyles();
   
   return (      
-    <Fragment>
+    <div>
       <div className="scrollBarTop" >
                 Upcoming Movies
       </div>
@@ -36,7 +36,7 @@ export default function UpcomingImageList({upcoming}) {
           </ImageListItem>
         ))}
       </ImageList>
-    </Fragment>
+    </div>
          
   );
 }

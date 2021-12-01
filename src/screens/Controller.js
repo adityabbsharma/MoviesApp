@@ -14,11 +14,25 @@ const Controller = () => {
     "mobile_number": "",
     "password": ""
   });
-  const [token, setToken] = useState(false);
+  // const [token, setToken] = useState(false);
+  const [bookShowButtonShow, setBookShowButtonShow] = useState(false);
   const baseUrl = "/api/v1/";
   // function logInHandler() {
   //   setToken(true);
   // }
+  const [idbtn, setIdbtn] = useState("");
+  const idBtnHandler = (id) => {
+    setIdbtn(id);
+  }
+
+  const bookShowButtonHandler = (bol) => {
+    if (bol) {
+      setBookShowButtonShow(true);
+    }
+    else {
+      setBookShowButtonShow(false);
+    }
+  }
 
   return (
     <Router>
@@ -26,19 +40,19 @@ const Controller = () => {
         <Route
           exact
           path="/"
-          render={(props) => <Home {...props} setUserDetails={setUserDetails} userDetails={userDetails} setToken = {setToken} token={token} baseUrl={baseUrl}  />}
+          render={(props) => <Home {...props} idbtn={idbtn} idBtnHandler={idBtnHandler} bookShowButtonShow={bookShowButtonShow} bookShowButtonHandler={bookShowButtonHandler} setUserDetails={setUserDetails} userDetails={userDetails} baseUrl={baseUrl} />}
         />
         <Route
           path="/movie/:id"
-          render={(props) => <Details {...props} baseUrl={baseUrl} />}
+          render={(props) => <Details {...props} idbtn={idbtn} idBtnHandler={idBtnHandler} bookShowButtonShow={bookShowButtonShow} bookShowButtonHandler={bookShowButtonHandler} baseUrl={baseUrl} />}
         />
         <Route
           path="/bookshow/:id"
-          render={(props) => <BookShow {...props} baseUrl={baseUrl} />}
+          render={(props) => <BookShow {...props} idbtn={idbtn} idBtnHandler={idBtnHandler} bookShowButtonShow={bookShowButtonShow} bookShowButtonHandler={bookShowButtonHandler} baseUrl={baseUrl} />}
         />
         <Route
           path="/confirm/:id"
-          render={(props) => <Confirmation {...props} baseUrl={baseUrl} />}
+          render={(props) => <Confirmation {...props} idbtn={idbtn} idBtnHandler={idBtnHandler} bookShowButtonShow={bookShowButtonShow} bookShowButtonHandler={bookShowButtonHandler} baseUrl={baseUrl} />}
         />
       </div>
     </Router>
